@@ -1,0 +1,16 @@
+name: check
+on: push
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # binfmt: the LFI clang is aarch64 and forks cc1/ld.lld under qemu-user.
+      - uses: docker/setup-qemu-action@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix flake check -L
